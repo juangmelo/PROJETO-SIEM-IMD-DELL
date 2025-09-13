@@ -1,0 +1,11 @@
+groups:
+  - name: SystemAlerts
+    rules:
+      - alert: HighCPUUsage
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Uso de CPU alto no servidor {{ $labels.instance }}"
+          description: "O uso de CPU no servidor {{ $labels.instance }} está acima de 80%."
