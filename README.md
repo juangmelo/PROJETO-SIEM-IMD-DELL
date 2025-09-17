@@ -1,90 +1,91 @@
-PROJETO-SIEM-IMD-DELL - Implementação de Solução de SIEM Usando Microsserviços
-Este repositório contém o projeto de implementação de uma solução de um laboratório de observalidade baseada em microsserviços e Docker para um cenário de prova de conceito. O projeto foi desenvolvido como parte do módulo Monitoramento e Análise de Ameaças.
-
-Lab 01 (Observabilidade): Implementação de uma infraestrutura para coleta de métricas e logs, visualização e geração de alertas.
-
-Lab 01 - Infraestrutura de Observabilidade
-Arquitetura
-A infraestrutura do Lab 01 utiliza uma arquitetura de microsserviços baseada em Docker Compose para monitorar métricas e logs de servidores e contêineres.
-
-Componentes:
-
-Node Exporter: Coleta métricas do sistema operacional da máquina host.
-
-cAdvisor: Coleta métricas de uso de recursos dos contêineres.
-
-Prometheus: Servidor que coleta e armazena as métricas do Node Exporter e cAdvisor.
-
-Promtail: Coleta logs do sistema e os envia para o Loki.
-
-Loki: Sistema de armazenamento de logs.
-
-Grafana: Interface de visualização para métricas e logs.
-
-AlertManager: Gerencia e envia alertas disparados pelo Prometheus para um webhook.
-
-Pré-requisitos
-Certifique-se de que o Docker e o Docker Compose estão instalados e em execução na sua máquina.
-
-Guia de Implantação (Deploy)
-Clone o repositório:
-
-Bash
-
-git clone https://github.com/juangmelo/PROJETO-SIEM-IMD-DELL
-cd PROJETO-SIEM-IMD-DELL
-Ajustar Permissões (Obrigatório)
+# PROJETO-SIEM-IMD-DELL
+Implementação de Solução de SIEM Usando Micro Serviços
+Esse arquivo README.md a seguir contém:
+ 
+Uma breve introdução ao projeto.
+ 
+Os pré-requisitos técnicos.
+ 
+Um guia de instalação e inicialização (Getting Started).
+ 
+Instruções para a simulação do evento.
+ 
+# Projeto de Observabilidade: SIEM
+ 
+Este repositório contém uma infraestrutura de observabilidade completa, construída com Docker Compose. O projeto é capaz de coletar métricas e logs de uma máquina host e dos próprios contêineres, além de visualizar os dados e gerar alertas em tempo real.
+ 
+## Requisitos
+ 
+Antes de começar, certifique-se de que sua máquina atende aos seguintes requisitos:
+ 
+* **Docker**
+* **Docker Compose Plugin** (versão 1.29.0 ou superior, integrada ao Docker CLI)
+ 
+## Primeiros Passos
+ 
+Siga estes passos para iniciar a infraestrutura de observabilidade.
+ 
+### 1. Clonar o Repositório
+ 
+```bash
+##git clone <https://github.com/juangmelo/PROJETO-SIEM-IMD-DELL.git>
+##cd <PROJETO-SIEM-IMD-DELL>
+2. Verificar a Estrutura do Projeto
+Confirme se os arquivos e diretórios estão na estrutura correta. O seu diretório principal deve conter as seguintes pastas e arquivos:
+ 
+.
+├── docker-compose.yaml
+├── prometheus
+│   ├── prometheus.yml
+│   └── alerts.yml
+├── grafana
+├── alertmanager
+│   └── config.yml
+├── loki
+│   └── config.yaml
+└── promtail
+    └── promtail-config.yaml
+    
+3. Ajustar Permissões (Obrigatório)
 O contêiner do Grafana precisa de permissões de escrita em sua pasta de dados. Execute o comando abaixo para garantir que tudo funcione corretamente.
-
+ 
 Bash
-
+ 
 sudo chmod -R 777 ./grafana
-Inicie a infraestrutura:
-Execute o comando abaixo para iniciar todos os serviços definidos no docker-compose.yaml. As pastas de dados serão criadas automaticamente.
-
+4. Iniciar os Contêineres
+Execute o comando abaixo no diretório raiz do projeto. O Docker fará o download das imagens necessárias e iniciará todos os serviços em segundo plano.
+ 
 Bash
-
+ 
 sudo docker compose up -d
-Configuração e Uso
-Acesse as interfaces:
-
+5. Verificar o Status dos Serviços
+Confirme se todos os serviços estão em execução.
+ 
+Bash
+ 
+sudo docker compose ps
+Se todos os serviços (prometheus, node-exporter, cadvisor, loki, promtail, grafana, alertmanager) estiverem com o status Up, sua infraestrutura está pronta.
+ 
+Acessando as Interfaces
+Você pode acessar os serviços nos seguintes endereços:
+ 
+Grafana: http://localhost:3000 (Login inicial: admin/admin)
+ 
 Prometheus: http://localhost:9090
-
-Grafana: http://localhost:3000 (Usuário/Senha padrão: admin/admin)
-
-AlertManager: http://localhost:9093
-
-Configurar fontes de dados no Grafana:
-Ao acessar o Grafana, você deve conectar o Prometheus e o Loki como fontes de dados.
-
-Prometheus: Vá em Connections > Add new connection > Prometheus. Na URL, insira http://prometheus:9090 e clique em Save & test.
-
-Loki: Vá em Connections > Add new connection > Loki. Na URL, insira http://loki:3100 e clique em Save & test.
-
-Ajustar URL do Webhook
-Lembre-se de que a URL do Webhook no arquivo alertmanager/config.yml é específica para cada usuário. Você deve substituir a URL pela sua própria para testar o recebimento dos alertas.
-
-Visualizar métricas e logs:
-No Grafana, você pode criar painéis para visualizar as métricas do Prometheus (por exemplo, node_cpu_seconds_total) e os logs do Loki (por exemplo, {job="varlogs"}).
-
-Simulação de Anomalia e Alerta
-Para demonstrar o funcionamento do sistema de alerta, o projeto simula um alto uso de CPU, que dispara uma notificação via webhook.
-
-Simular anomalia:
-No terminal da máquina host, execute o comando abaixo para forçar o uso de CPU.
-
+ 
+Alertmanager: http://localhost:9093
+ 
+Simulação de Evento
+Para testar o sistema de alertas, vamos simular um evento de alto uso de CPU na máquina host.
+ 
+Instale a ferramenta stress:
+ 
 Bash
-
-while true; do :; done &
-Verificar o alerta:
-
-Após cerca de 1 minuto, verifique a interface do AlertManager em http://localhost:9093 para ver o status do alerta como "FIRING".
-
-Acesse a URL do webhook configurado no alertmanager/config.yml para confirmar o recebimento da notificação.
-
-Finalizar a simulação:
-Para parar o processo, use o comando kill com o ID do processo que foi retornado.
-
+ 
+sudo apt-get update && sudo apt-get install stress -y
+Force o uso da CPU: Este comando sobrecarregará todos os núcleos de CPU da sua máquina por 2 minutos.
+ 
 Bash
-
-kill <ID_do_processo>
+ 
+stress --cpu $(nproc) --timeout 120s
+Verifique o Alerta: Após cerca de 1 minuto, o Prometheus detectará o alto uso de CPU, disparará um alerta para o Alertmanager, que enviará uma notificação para o webhook configurado. Verifique a URL do seu webhook para confirmar a notificação.
