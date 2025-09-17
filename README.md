@@ -1,5 +1,6 @@
 # PROJETO-SIEM-IMD-DELL
-Implementação de Solução de SIEM Usando Micro Serviços
+Implementação de Solução de SIEM Usando Micro Serviços.
+
 Este repositório contém o projeto de implementação de uma solução de 
 um laboratório de observalidade baseado em microsserviços e Docker para um cenário de prova de conceito. O projeto foi desenvolvido como parte do módulo 
 Monitoramento e Análise de Ameaças.
