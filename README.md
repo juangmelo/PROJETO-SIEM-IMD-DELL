@@ -96,3 +96,4 @@ kill <ID_do_processo>
 ```
 
 [![Demonstração da Simulação](https://img.youtube.com/vi/uDn3Wtw2nBs/0.jpg)](https://www.youtube.com/watch?v=uDn3Wtw2nBs)
+Demonstração de um caso de uso do laboratório de observalidade.
